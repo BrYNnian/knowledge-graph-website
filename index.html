@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Graph</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+</head>
+<body>
+    <div id="cy" style="width: 100%; height: 600px;"></div>
+    <script>
+        fetch("https://your-ngrok-url.ngrok.io/graph") // 替换为实际 ngrok URL
+            .then(response => response.json())
+            .then(data => {
+                const elements = [];
+                data.forEach(edge => {
+                    elements.push(
+                        { data: { id: edge.source, label: edge.source } },
+                        { data: { id: edge.target, label: edge.target } },
+                        { data: { source: edge.source, target: edge.target, label: edge.relationship } }
+                    );
+                });
+                const cy = cytoscape({
+                    container: document.getElementById('cy'),
+                    elements: elements,
+                    style: [
+                        { selector: 'node', style: { 'background-color': '#0074D9', 'label': 'data(label)' } },
+                        { selector: 'edge', style: { 'line-color': '#CCC', 'target-arrow-color': '#CCC', 'target-arrow-shape': 'triangle', 'label': 'data(label)' } }
+                    ],
+                    layout: { name: 'cose', animate: true }
+                });
+            });
+    </script>
+</body>
+</html>
